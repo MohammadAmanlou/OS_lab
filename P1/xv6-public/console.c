@@ -333,7 +333,7 @@ static void arrow(enum Arrow arr){
     input.e -- ;
     input.buf[input.e] = '\0';
   }
-  if ((arr == DOWN)&&(history.index < 9)&&(history.index < history.last )){
+  if ((arr == DOWN)&&(history.index < 9)&&(history.index + 1 < history.last )){
     input = history.hist[history.index + 2 ];
     history.index ++ ;
     input.e -- ;
@@ -497,4 +497,3 @@ consoleinit(void)
 
   ioapicenable(IRQ_KBD, 0);
 }
-
