@@ -12,11 +12,11 @@
 00000000 .debug_loc
 00000000 .debug_ranges
 00000000 usertests.c
-00005f00 args.1449
+00005f00 args.1451
 00000000 ulib.c
 00000000 printf.c
 00003a30 printint
-000055e8 digits.1085
+000055e8 digits.1087
 00000000 umalloc.c
 00005f80 freep
 00005f84 base
@@ -61,6 +61,7 @@
 00000c00 preempt
 000039d3 unlink
 00003690 argptest
+00003a23 find_digital_root
 00000de0 mem
 0000397b fork
 00003a0b sbrk

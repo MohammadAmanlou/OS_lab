@@ -557,10 +557,12 @@ SYSCALL(uptime)
  32b:	b8 0e 00 00 00       	mov    $0xe,%eax
  330:	cd 40                	int    $0x40
  332:	c3                   	ret    
- 333:	66 90                	xchg   %ax,%ax
- 335:	66 90                	xchg   %ax,%ax
- 337:	66 90                	xchg   %ax,%ax
- 339:	66 90                	xchg   %ax,%ax
+
+00000333 <find_digital_root>:
+SYSCALL(find_digital_root)
+ 333:	b8 16 00 00 00       	mov    $0x16,%eax
+ 338:	cd 40                	int    $0x40
+ 33a:	c3                   	ret    
  33b:	66 90                	xchg   %ax,%ax
  33d:	66 90                	xchg   %ax,%ax
  33f:	90                   	nop

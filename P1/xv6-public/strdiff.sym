@@ -14,7 +14,7 @@
 00000000 ulib.c
 00000000 printf.c
 00000470 printint
-000008f8 digits.1085
+000008f8 digits.1087
 00000000 umalloc.c
 00000bac freep
 00000bb0 base
@@ -35,6 +35,7 @@
 000003cb wait
 000003db read
 00000413 unlink
+00000463 find_digital_root
 000003bb fork
 0000044b sbrk
 0000045b uptime

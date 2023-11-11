@@ -672,10 +672,12 @@ SYSCALL(uptime)
  40b:	b8 0e 00 00 00       	mov    $0xe,%eax
  410:	cd 40                	int    $0x40
  412:	c3                   	ret    
- 413:	66 90                	xchg   %ax,%ax
- 415:	66 90                	xchg   %ax,%ax
- 417:	66 90                	xchg   %ax,%ax
- 419:	66 90                	xchg   %ax,%ax
+
+00000413 <find_digital_root>:
+SYSCALL(find_digital_root)
+ 413:	b8 16 00 00 00       	mov    $0x16,%eax
+ 418:	cd 40                	int    $0x40
+ 41a:	c3                   	ret    
  41b:	66 90                	xchg   %ax,%ax
  41d:	66 90                	xchg   %ax,%ax
  41f:	90                   	nop

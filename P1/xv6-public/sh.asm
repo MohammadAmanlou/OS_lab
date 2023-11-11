@@ -2009,10 +2009,12 @@ SYSCALL(uptime)
      e2b:	b8 0e 00 00 00       	mov    $0xe,%eax
      e30:	cd 40                	int    $0x40
      e32:	c3                   	ret    
-     e33:	66 90                	xchg   %ax,%ax
-     e35:	66 90                	xchg   %ax,%ax
-     e37:	66 90                	xchg   %ax,%ax
-     e39:	66 90                	xchg   %ax,%ax
+
+00000e33 <find_digital_root>:
+SYSCALL(find_digital_root)
+     e33:	b8 16 00 00 00       	mov    $0x16,%eax
+     e38:	cd 40                	int    $0x40
+     e3a:	c3                   	ret    
      e3b:	66 90                	xchg   %ax,%ax
      e3d:	66 90                	xchg   %ax,%ax
      e3f:	90                   	nop

@@ -89,3 +89,12 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+sys_find_digital_root(void)
+{
+  int n = myproc()->tf->ebx;
+  cprintf("KERNEL: sys_find_digital_root(%d)\n", n);
+  return find_digital_root(n);
+
+}
