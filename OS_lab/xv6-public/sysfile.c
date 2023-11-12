@@ -442,3 +442,48 @@ sys_pipe(void)
   fd[1] = fd1;
   return 0;
 }
+
+int 
+sys_copy_file(void) {
+  char* src_path;
+  char* dst_path;
+  
+  struct inode* ip_dst;
+  struct inode* ip_src;
+  int bytesRead;
+  char buf[1024];
+
+  if (argstr(0, &src_path) < 0 || argstr(1, &dst_path) < 0)
+    return -1;
+  begin_op();
+
+  if ((ip_src = namei(src_path)) == 0) { // Check if source file exists
+    end_op();
+    return -1;
+  }
+ 
+  ip_dst = namei(dst_path);
+  if (ip_dst > 0) { // Check if destination file already exists
+    end_op();
+    return -1;
+  }
+  ip_dst = create(dst_path, T_FILE, 0, 0);
+
+  int bytesWrote = 0;
+  int readOffset = 0;
+  int writeOffset = 0;
+  ilock(ip_src);
+  while ((bytesRead = readi(ip_src, buf, readOffset, sizeof(buf))) > 0) {
+    readOffset += bytesRead;
+    if ((bytesWrote = writei(ip_dst , buf,writeOffset,  bytesRead)) <= 0)
+      return -1;
+    writeOffset += bytesWrote;
+   
+}
+
+  iunlock(ip_src);
+  iunlock(ip_dst);
+  end_op();
+
+  return 0;
+}

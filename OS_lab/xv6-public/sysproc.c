@@ -128,12 +128,9 @@ sys_find_digital_root(void)
 
 }
 
-int sys_copy_file(void){
-  return -1;
-}
 
 // int sys_copy_file(void) {
-//   char* src_path;
+//   char* src_path
 //   char* dst_path;
 //   struct file* f_dst;
 //   struct file* f_src;
