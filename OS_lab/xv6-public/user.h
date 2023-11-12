@@ -24,6 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int find_digital_root(void);
+int get_process_lifetime(int);
 
 // ulib.c
 int stat(const char*, struct stat*);
