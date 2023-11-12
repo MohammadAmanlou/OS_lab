@@ -30,3 +30,5 @@ SYSCALL(sbrk)
 SYSCALL(sleep)
 SYSCALL(uptime)
 SYSCALL(find_digital_root)
+SYSCALL(get_process_lifetime)
+
