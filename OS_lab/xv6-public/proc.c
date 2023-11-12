@@ -497,10 +497,10 @@ kill(int pid)
 }
 
 //get process lifetime:
-int get_process_lifetime(int pid){
+/*int get_process_lifetime(int pid){
   pid = pid - 1;
   int lifetime;
-  cprintf("pid in proc.c is %d\n", pid);
+  cprintf("pid in proc.c is %d\n", pid + 1 );
   struct proc *p;
   acquire(&ptable.lock);
   if(pid < 0 || pid >= NPROC){
@@ -508,7 +508,6 @@ int get_process_lifetime(int pid){
       }
   int count = 0;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    cprintf("%d,                     \n", p->pid);
     if((p->pid) == pid){
       //cprintf("%dp-> pid is found\n", (p->pid));
       lifetime = ticks - (p->start_time);
@@ -522,7 +521,7 @@ int get_process_lifetime(int pid){
   release(&ptable.lock);
   return -1;
     
-}
+}*/
 
 
 //get_uncle_count
@@ -617,4 +616,9 @@ find_digital_root(int n){
   }
   
   return n;
+}
+
+int
+get_process_lifetime(void){
+  return sys_uptime() - myproc()->start_time ; 
 }

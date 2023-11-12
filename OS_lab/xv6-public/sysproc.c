@@ -15,13 +15,17 @@
 
 
 
-int sys_get_process_lifetime(void){
+/*int sys_get_process_lifetime(void){
   int pid;
   
   if(argint(0, &pid) < 0)
     return -1;
   //cprintf("sysproc.h %d", pid);
   return get_process_lifetime(pid);
+}*/
+
+int sys_get_process_lifetime(void){
+  return get_process_lifetime();
 }
 
 int sys_get_uncle_count(void){

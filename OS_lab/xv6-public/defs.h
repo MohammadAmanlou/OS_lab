@@ -104,7 +104,7 @@ int             pipewrite(struct pipe*, char*, int);
 //PAGEBREAK: 16
 // proc.c
 int             get_uncle_count(int);
-int             get_process_lifetime(int);
+int             get_process_lifetime(void);
 int             cpuid(void);
 void            exit(void);
 int             fork(void);
@@ -123,6 +123,7 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 int 		   find_digital_root(int);
+
 
 // swtch.S
 void            swtch(struct context**, struct context*);

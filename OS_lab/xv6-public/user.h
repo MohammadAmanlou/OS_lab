@@ -24,7 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int find_digital_root(void);
-int get_process_lifetime(int);
+int get_process_lifetime(void);
 int copy_file(const char*, const char*);
 int get_uncle_count(int);
 
