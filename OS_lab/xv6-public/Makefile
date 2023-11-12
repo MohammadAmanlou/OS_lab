@@ -183,6 +183,7 @@ UPROGS=\
 	_zombie\
 	_strdiff\
 	_digital_root_testing\
+        _get_process_lifetime_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
