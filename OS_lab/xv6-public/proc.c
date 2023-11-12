@@ -496,6 +496,34 @@ kill(int pid)
   return -1;
 }
 
+//get process lifetime:
+int get_process_lifetime(int pid){
+  pid = pid - 1;
+  int lifetime;
+  //cprintf("pid in proc.c is %d\n", pid);
+  struct proc *p;
+  acquire(&ptable.lock);
+  if(pid < 0 || pid >= NPROC){
+      return -1;
+      }
+  int count = 0;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    //cprintf("%d\n", p->pid);
+    if((p->pid) == pid){
+      //cprintf("%dp-> pid is found\n", (p->pid));
+      lifetime = ticks - (p->start_time);
+      release(&ptable.lock);
+      return lifetime;
+    }
+    if(count > 80){
+      break;
+    }
+  }
+  release(&ptable.lock);
+  return -1;
+    
+}
+
 //PAGEBREAK: 36
 // Print a process listing to console.  For debugging.
 // Runs when user types ^P on console.
