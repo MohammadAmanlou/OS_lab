@@ -105,6 +105,8 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_find_digital_root(void);
 extern int sys_get_process_lifetime(void);
+extern int sys_copy_file(void);
+extern int sys_get_uncle_count(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -130,6 +132,8 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_find_digital_root] sys_find_digital_root,
 [SYS_get_process_lifetime] sys_get_process_lifetime,
+[SYS_copy_file] sys_copy_file,
+[SYS_get_uncle_count] sys_get_uncle_count,
 };
 
 void

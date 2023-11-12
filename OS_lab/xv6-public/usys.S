@@ -31,4 +31,6 @@ SYSCALL(sleep)
 SYSCALL(uptime)
 SYSCALL(find_digital_root)
 SYSCALL(get_process_lifetime)
+SYSCALL(copy_file)
+SYSCALL(get_uncle_count)
 

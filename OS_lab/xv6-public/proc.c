@@ -111,7 +111,7 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
-
+  p->start_time = ticks;
   return p;
 }
 
@@ -500,7 +500,7 @@ kill(int pid)
 int get_process_lifetime(int pid){
   pid = pid - 1;
   int lifetime;
-  //cprintf("pid in proc.c is %d\n", pid);
+  cprintf("pid in proc.c is %d\n", pid);
   struct proc *p;
   acquire(&ptable.lock);
   if(pid < 0 || pid >= NPROC){
@@ -508,7 +508,7 @@ int get_process_lifetime(int pid){
       }
   int count = 0;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    //cprintf("%d\n", p->pid);
+    cprintf("%d,                     \n", p->pid);
     if((p->pid) == pid){
       //cprintf("%dp-> pid is found\n", (p->pid));
       lifetime = ticks - (p->start_time);
@@ -522,6 +522,49 @@ int get_process_lifetime(int pid){
   release(&ptable.lock);
   return -1;
     
+}
+
+
+//get_uncle_count
+int get_uncle_count(int pid){
+  //pid = pid - 1; //////////////////////////////???????????????
+  struct proc *p;
+  struct proc *p_parent;
+  struct proc *p_grandParent = 0;
+  acquire(&ptable.lock);
+  if(pid < 0 || pid >= NPROC){
+      return -1;
+      }
+  int count = 0;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    count ++;
+    if((p->pid) == pid){
+      p_parent = p->parent;
+      if(p_parent != 0){
+        p_grandParent = p_parent->parent;
+        if(p_grandParent == 0){
+          cprintf("grandparent is zero.");
+          return -1;
+        }
+      }
+      else{
+        cprintf("parent is zero.");
+        return -1;
+      }
+    }
+    if(count > 80){
+      break;
+    }
+  }
+  int siblings = 0;
+  for(struct proc *i = ptable.proc; i < &ptable.proc[NPROC]; i++){
+    if(i->parent == p_grandParent){
+      siblings++;
+    }
+  }
+  release(&ptable.lock);
+  return siblings;
+
 }
 
 //PAGEBREAK: 36
