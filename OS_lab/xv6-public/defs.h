@@ -17,6 +17,7 @@ void            brelse(struct buf*);
 void            bwrite(struct buf*);
 
 // console.c
+int             num_digits(int n);
 void            consoleinit(void);
 void            cprintf(char*, ...);
 void            consoleintr(int(*)(void));
@@ -126,6 +127,9 @@ void            yield(void);
 int 		   find_digital_root(int);
 int				change_Q(int, int);
 void			show_process_info(void);
+int             set_proc_bjf_params(int, float, float, float,float);
+int             set_system_bjf_params(float, float, float,float);
+
 
 
 // swtch.S
@@ -157,10 +161,12 @@ char*           strncpy(char*, const char*, int);
 
 // syscall.c
 int             argint(int, int*);
+int             argfloat(int, float*);
 int             argptr(int, char**, int);
 int             argstr(int, char**);
 int             fetchint(uint, int*);
 int             fetchstr(uint, char**);
+int             fetchfloat(uint, float*);
 void            syscall(void);
 
 // timer.c

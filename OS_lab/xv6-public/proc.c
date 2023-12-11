@@ -778,10 +778,120 @@ int change_Q(int pid, int new_queue)
   return old_queue;
 }
 
+int num_digits(int n) {
+  int num = 0;
+  while(n!= 0) {
+    n/=10;
+    num += 1;
+  }
+  return num;
+}
+
+void
+space(int count)
+{
+  for(int i = 0; i < count; ++i)
+    cprintf(" ");
+}
+
+int set_proc_bjf_params(int pid, float priority_ratio, float arrival_time_ratio, float executed_cycle_ratio, float process_size_ratio)
+{
+  struct proc *p;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->pid == pid)
+    {
+      p->sched_info.bjf.priority_ratio = priority_ratio;
+      p->sched_info.bjf.arrival_time_ratio = arrival_time_ratio;
+      p->sched_info.bjf.executed_cycle_ratio = executed_cycle_ratio;
+      p->sched_info.bjf.process_size_ratio = process_size_ratio;
+      release(&ptable.lock);
+      return 0;
+    }
+  }
+  release(&ptable.lock);
+  return -1;
+}
+
+int set_system_bjf_params(float priority_ratio, float arrival_time_ratio, float executed_cycle_ratio, float process_size_ratio)
+{
+  struct proc *p;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    p->sched_info.bjf.priority_ratio = priority_ratio;
+    p->sched_info.bjf.arrival_time_ratio = arrival_time_ratio;
+    p->sched_info.bjf.executed_cycle_ratio = executed_cycle_ratio;
+    p->sched_info.bjf.process_size_ratio = process_size_ratio;
+  }
+  release(&ptable.lock);
+  return 0;
+}
 
 void show_process_info()
 {
 
-  acquire(&ptable.lock);
-  
+  static char *states[] = {
+      [UNUSED] "unused",
+      [EMBRYO] "embryo",
+      [SLEEPING] "sleeping",
+      [RUNNABLE] "runnable",
+      [RUNNING] "running",
+      [ZOMBIE] "zombie"};
+
+  static int columns[] = {16, 8, 9, 8, 8, 8, 9, 8, 8, 8, 8};
+  cprintf("Process_Name    PID     State    Queue   Cycle   Arrival Priority R_Prty  R_Arvl  R_Exec  R_Size  Rank\n"
+          "------------------------------------------------------------------------------------------------------\n");
+
+  struct proc *p;
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->state == UNUSED)
+      continue;
+
+    const char *state;
+    if (p->state >= 0 && p->state < NELEM(states) && states[p->state])
+      state = states[p->state];
+    else
+      state = "unknown state";
+
+    cprintf("%s", p->name);
+    space(columns[0] - strlen(p->name));
+
+    cprintf("%d", p->pid);
+    space(columns[1] - num_digits(p->pid));
+
+    cprintf("%s", state);
+    space(columns[2] - strlen(state));
+
+    cprintf("%d", p->sched_info.queue);
+    space(columns[3] - num_digits(p->sched_info.queue));
+
+    cprintf("%d", (int)p->sched_info.bjf.executed_cycle);
+    space(columns[4] - num_digits((int)p->sched_info.bjf.executed_cycle));
+
+    cprintf("%d", p->sched_info.bjf.arrival_time);
+    space(columns[5] - num_digits(p->sched_info.bjf.arrival_time));
+
+    cprintf("%d", p->sched_info.bjf.priority);
+    space(columns[6] - num_digits(p->sched_info.bjf.priority));
+
+    cprintf("%d", (int)p->sched_info.bjf.priority_ratio);
+    space(columns[7] - num_digits((int)p->sched_info.bjf.priority_ratio));
+
+    cprintf("%d", (int)p->sched_info.bjf.arrival_time_ratio);
+    space(columns[8] - num_digits((int)p->sched_info.bjf.arrival_time_ratio));
+
+    cprintf("%d", (int)p->sched_info.bjf.executed_cycle_ratio);
+    space(columns[9] - num_digits((int)p->sched_info.bjf.executed_cycle_ratio));
+
+    cprintf("%d", (int)p->sched_info.bjf.process_size_ratio);
+    space(columns[10] - num_digits((int)p->sched_info.bjf.process_size_ratio));
+
+    cprintf("%d", (int)bjfrank(p));
+    cprintf("\n");
+  }
 }

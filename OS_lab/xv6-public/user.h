@@ -29,6 +29,8 @@ int copy_file(const char*, const char*);
 int get_uncle_count(int);
 int change_sched_Q(int , int);
 void show_process_info(void);
+int set_proc_bjf_params(int, float, float, float,float);
+int set_system_bjf_params(float, float, float,float);
 
 // ulib.c
 int stat(const char*, struct stat*);

@@ -26,4 +26,6 @@
 #define SYS_get_uncle_count 25
 #define SYS_show_process_info 26
 #define SYS_change_sched_Q 27
+#define SYS_set_system_bjf_params 28
+#define SYS_set_proc_bjf_params 29
 
