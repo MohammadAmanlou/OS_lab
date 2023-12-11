@@ -105,6 +105,22 @@ sys_sleep(void)
   release(&tickslock);
   return 0;
 }
+int
+sys_change_sched_Q(void)
+{
+  int queue_number, pid;
+  if(argint(0, &pid) < 0 || argint(1, &queue_number) < 0)
+    return -1;
+
+  if(queue_number < ROUND_ROBIN || queue_number > BJF)
+    return -1;
+
+  return change_Q(pid, queue_number);
+}
+
+void sys_show_process_info(void) {
+  show_process_info();
+}
 
 // return how many clock tick interrupts have occurred
 // since start.

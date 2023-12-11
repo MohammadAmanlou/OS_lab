@@ -24,3 +24,6 @@
 #define SYS_get_process_lifetime 23
 #define SYS_copy_file 24
 #define SYS_get_uncle_count 25
+#define SYS_show_process_info 26
+#define SYS_change_sched_Q 27
+

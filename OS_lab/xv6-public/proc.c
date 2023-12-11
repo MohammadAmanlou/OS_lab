@@ -9,7 +9,7 @@
 
 #define AGING_THRESHOLD 8000
 
-int change_queue(int pid, int new_queue);
+int change_Q(int pid, int new_queue);
 struct proc *
 roundrobin(struct proc *last_scheduled);
 struct proc *
@@ -159,7 +159,7 @@ userinit(void)
   p->state = RUNNABLE;
 
   release(&ptable.lock);
-  change_queue(p->pid, UNSET);
+  change_Q(p->pid, UNSET);
 }
 
 // Grow current process's memory by n bytes.
@@ -234,7 +234,7 @@ fork(void)
   np->state = RUNNABLE;
 
   release(&ptable.lock);
-  change_queue(np->pid, UNSET);
+  change_Q(np->pid, UNSET);
 
   return pid;
 }
@@ -740,7 +740,7 @@ void ageprocs(int os_ticks)
       if (os_ticks - p->sched_info.last_run > AGING_THRESHOLD)
       {
         release(&ptable.lock);
-        change_queue(p->pid, ROUND_ROBIN);
+        change_Q(p->pid, ROUND_ROBIN);
         acquire(&ptable.lock);
       }
     }
@@ -749,7 +749,7 @@ void ageprocs(int os_ticks)
 }
 
 
-int change_queue(int pid, int new_queue)
+int change_Q(int pid, int new_queue)
 {
   struct proc *p;
   int old_queue = -1;
@@ -776,4 +776,12 @@ int change_queue(int pid, int new_queue)
   }
   release(&ptable.lock);
   return old_queue;
+}
+
+
+void show_process_info()
+{
+
+  acquire(&ptable.lock);
+  
 }

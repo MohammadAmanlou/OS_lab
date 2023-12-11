@@ -124,6 +124,8 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 int 		   find_digital_root(int);
+int				change_Q(int, int);
+void			show_process_info(void);
 
 
 // swtch.S

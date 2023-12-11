@@ -27,6 +27,8 @@ int find_digital_root(void);
 int get_process_lifetime(void);
 int copy_file(const char*, const char*);
 int get_uncle_count(int);
+int change_sched_Q(int , int);
+void show_process_info(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
