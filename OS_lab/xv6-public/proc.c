@@ -7,6 +7,14 @@
 #include "proc.h"
 #include "spinlock.h"
 
+#define AGING_THRESHOLD 8000
+
+int change_queue(int pid, int new_queue);
+struct proc *
+roundrobin(struct proc *last_scheduled);
+struct proc *
+lcfs(void);
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -151,6 +159,7 @@ userinit(void)
   p->state = RUNNABLE;
 
   release(&ptable.lock);
+  change_queue(p->pid, UNSET);
 }
 
 // Grow current process's memory by n bytes.
@@ -217,8 +226,30 @@ fork(void)
   np->state = RUNNABLE;
 
   release(&ptable.lock);
+  change_queue(np->pid, UNSET);
 
   return pid;
+}
+
+struct proc *
+lcfs(void)
+{
+  struct proc *result = 0;
+
+  struct proc *p;
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->state != RUNNABLE || p->sched_info.queue != LCFS)
+      continue;
+    if (result != 0)
+    {
+      if (result->sched_info.arrival_queue_time < p->sched_info.arrival_queue_time)
+        result = p;
+    }
+    else
+      result = p;
+  }
+  return result;
 }
 
 // Exit the current process.  Does not return.
@@ -319,39 +350,83 @@ wait(void)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
-void
-scheduler(void)
+void scheduler(void)
 {
   struct proc *p;
-  struct cpu *c = mycpu();
-  c->proc = 0;
   
-  for(;;){
-    // Enable interrupts on this processor.
+  struct cpu *c = mycpu();
+  struct proc *last_scheduled_RR = &ptable.proc[NPROC - 1];
+  c->proc = 0;
+
+  for (;;)
+  {
     sti();
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
-        continue;
 
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
+    p = roundrobin(last_scheduled_RR);
 
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
+    if (p)
+    {
+      last_scheduled_RR = p;
     }
-    release(&ptable.lock);
+    else
+    {
 
+      p = lcfs();
+      if (!p)
+      {
+        //p = bestjobfirst();
+        if (!p)
+        {
+          release(&ptable.lock);
+          continue;
+        }
+      }
+    }
+
+    // Switch to chosen process.  It is the process's job
+    // to release ptable.lock and then reacquire it
+    // before jumping back to us.
+
+    c->proc = p;
+    switchuvm(p);
+
+    p->state = RUNNING;
+
+    p->sched_info.last_run = ticks;
+
+    p->sched_info.bjf.executed_cycle += 0.1f;
+
+    swtch(&(c->scheduler), p->context);
+
+    switchkvm();
+
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    c->proc = 0;
+  release(&ptable.lock);
+
+  }
+
+}
+
+struct proc *
+roundrobin(struct proc *last_scheduled)
+{
+  struct proc *p = last_scheduled;
+  for (;;)
+  {
+    p++;
+    if (p >= &ptable.proc[NPROC])
+      p = ptable.proc;
+
+    if (p->state == RUNNABLE && p->sched_info.queue == ROUND_ROBIN)
+      return p;
+
+    if (p == last_scheduled)
+      return 0;
   }
 }
 
@@ -621,4 +696,53 @@ find_digital_root(int n){
 int
 get_process_lifetime(void){
   return sys_uptime() - myproc()->start_time ; 
+}
+
+void ageprocs(int os_ticks)
+{
+  struct proc *p;
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->state == RUNNABLE && p->sched_info.queue != ROUND_ROBIN)
+    {
+      if (os_ticks - p->sched_info.last_run > AGING_THRESHOLD)
+      {
+        release(&ptable.lock);
+        change_queue(p->pid, ROUND_ROBIN);
+        acquire(&ptable.lock);
+      }
+    }
+  }
+  release(&ptable.lock);
+}
+
+
+int change_queue(int pid, int new_queue)
+{
+  struct proc *p;
+  int old_queue = -1;
+
+  if (new_queue == UNSET)
+  {
+    if (pid == 1)
+      new_queue = ROUND_ROBIN;
+    else if (pid > 1)
+      new_queue = LCFS;
+    else
+      return -1;
+  }
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->pid == pid)
+    {
+      old_queue = p->sched_info.queue;
+      p->sched_info.queue = new_queue;
+
+      p->sched_info.arrival_queue_time = ticks;
+    }
+  }
+  release(&ptable.lock);
+  return old_queue;
 }
