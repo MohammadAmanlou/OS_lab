@@ -183,6 +183,14 @@ growproc(int n)
   return 0;
 }
 
+float bjfrank(struct proc *p)
+{
+  return p->sched_info.bjf.priority * p->sched_info.bjf.priority_ratio +
+         p->sched_info.bjf.arrival_time * p->sched_info.bjf.arrival_time_ratio +
+         p->sched_info.bjf.executed_cycle * p->sched_info.bjf.executed_cycle_ratio +
+         p->sched_info.bjf.process_size * p->sched_info.bjf.process_size_ratio;
+}
+
 // Create a new process copying p as the parent.
 // Sets up stack to return as if from system call.
 // Caller must set state of returned proc to RUNNABLE.
@@ -342,6 +350,29 @@ wait(void)
   }
 }
 
+struct proc *
+bestjobfirst(void)
+{
+  struct proc *p;
+  struct proc *min_p = 0;
+  float min_rank = 2e6;
+
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->state != RUNNABLE || p->sched_info.queue != BJF)
+      continue;
+    float p_rank = bjfrank(p);
+    if (p_rank < min_rank)
+    {
+      min_p = p;
+      min_rank = p_rank;
+    }
+  }
+
+  return min_p;
+}
+
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -377,7 +408,7 @@ void scheduler(void)
       p = lcfs();
       if (!p)
       {
-        //p = bestjobfirst();
+        p = bestjobfirst();
         if (!p)
         {
           release(&ptable.lock);
