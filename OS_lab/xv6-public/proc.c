@@ -119,6 +119,15 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
+  p->sched_info.bjf.arrival_time = ticks;
+  p->sched_info.queue = UNSET;
+  p->sched_info.bjf.priority = 3;
+  p->sched_info.bjf.priority_ratio = 1;
+  p->sched_info.bjf.arrival_time_ratio = 1;
+  p->sched_info.bjf.executed_cycle = 0;
+  p->sched_info.bjf.executed_cycle_ratio = 1;
+  p->sched_info.bjf.process_size = p->sz;
+  p->sched_info.bjf.process_size_ratio = 1;
   p->start_time = ticks;
   return p;
 }
@@ -429,6 +438,7 @@ void scheduler(void)
     p->sched_info.last_run = ticks;
 
     p->sched_info.bjf.executed_cycle += 0.1f;
+    // add 0.1 to executed_cycle for each tick
 
     swtch(&(c->scheduler), p->context);
 
@@ -632,7 +642,6 @@ kill(int pid)
 
 //get_uncle_count
 int get_uncle_count(int pid){
-  //pid = pid - 1; //////////////////////////////???????????????
   struct proc *p;
   struct proc *p_parent;
   struct proc *p_grandParent = 0;
