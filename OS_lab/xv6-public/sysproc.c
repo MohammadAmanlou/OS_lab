@@ -12,6 +12,7 @@
 //#include "file.h"
 #include "sleeplock.h"
 #include "stat.h"
+#include "mp.h"
 
 
 
@@ -228,4 +229,22 @@ sys_set_system_bjf_params(void)
 
   set_system_bjf_params(priority_ratio, arrival_time_ratio, executed_cycle_ratio,process_size_ratio);
   return 0;
+}
+
+int sys_init_queue_test(void) {
+  init_queue_test();
+  return 0;
+}
+
+int sys_syscalls_count(void) {
+  int total_syscalls_count = 0;
+  for(int i = 0 ; i < ncpu ; ++i) {
+    int syscalls_count = 0;
+    syscalls_count += cpus[i].syscalls_count;
+    total_syscalls_count += syscalls_count;
+    cprintf("cpus[%d].syscalls_count = %d\n", i, syscalls_count);
+  }
+  cprintf("total_syscalls_count = %d\n", total_syscalls_count);
+  cprintf("Shared syscalls count = %d\n", count_shared_syscalls);
+  return total_syscalls_count;
 }

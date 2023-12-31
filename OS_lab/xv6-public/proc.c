@@ -17,6 +17,8 @@ roundrobin(struct proc *last_scheduled);
 struct proc *
 lcfs(void);
 
+int count_shared_syscalls = 0;
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];

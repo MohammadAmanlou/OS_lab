@@ -8,11 +8,13 @@ struct cpu {
   int ncli;                    // Depth of pushcli nesting.
   int intena;                  // Were interrupts enabled before pushcli?
   struct proc *proc;           // The process running on this cpu or null
+  int syscalls_count;
 };
 
 extern struct cpu cpus[NCPU];
 extern int ncpu;
 extern int sys_uptime(void);
+extern int count_shared_syscalls;
 
 //PAGEBREAK: 17
 // Saved registers for kernel context switches.
