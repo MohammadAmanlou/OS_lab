@@ -145,6 +145,12 @@ sys_find_digital_root(void)
 }
 
 
+void
+sys_priorityLock_test(void){
+  priorityLock_test();
+}
+
+
 // int sys_copy_file(void) {
 //   char* src_path
 //   char* dst_path;

@@ -14,11 +14,12 @@
 00000000 ulib.c
 00000000 printf.c
 00000430 printint
-0000089c digits.1110
+0000089c digits.1112
 00000000 umalloc.c
 00000b44 freep
 00000b48 base
 000000e0 strcpy
+00000423 priorityLock_test
 000004e0 printf
 00000310 memmove
 000003fb get_uncle_count

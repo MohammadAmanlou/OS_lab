@@ -28,4 +28,5 @@
 #define SYS_change_sched_Q 27
 #define SYS_set_system_bjf_params 28
 #define SYS_set_proc_bjf_params 29
+#define SYS_priorityLock_test 30
 

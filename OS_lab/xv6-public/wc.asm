@@ -775,10 +775,12 @@ SYSCALL(set_system_bjf_params)
  4cb:	b8 1c 00 00 00       	mov    $0x1c,%eax
  4d0:	cd 40                	int    $0x40
  4d2:	c3                   	ret    
- 4d3:	66 90                	xchg   %ax,%ax
- 4d5:	66 90                	xchg   %ax,%ax
- 4d7:	66 90                	xchg   %ax,%ax
- 4d9:	66 90                	xchg   %ax,%ax
+
+000004d3 <priorityLock_test>:
+SYSCALL(priorityLock_test)
+ 4d3:	b8 1e 00 00 00       	mov    $0x1e,%eax
+ 4d8:	cd 40                	int    $0x40
+ 4da:	c3                   	ret    
  4db:	66 90                	xchg   %ax,%ax
  4dd:	66 90                	xchg   %ax,%ax
  4df:	90                   	nop

@@ -15,11 +15,12 @@
 00000000 ulib.c
 00000000 printf.c
 00000460 printint
-00000914 digits.1110
+00000914 digits.1112
 00000000 umalloc.c
 00000bc8 freep
 00000bcc base
 00000110 strcpy
+00000453 priorityLock_test
 00000510 printf
 00000bc0 argv
 00000340 memmove

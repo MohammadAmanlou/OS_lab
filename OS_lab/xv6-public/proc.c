@@ -6,6 +6,8 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "sleeplock.h"
+#include "priorityLock.h"
 
 #define AGING_THRESHOLD 8000
 
@@ -21,7 +23,7 @@ struct {
 } ptable;
 
 static struct proc *initproc;
-
+static struct PriorityLock lock;
 int nextpid = 1;
 extern void forkret(void);
 extern void trapret(void);
@@ -757,7 +759,6 @@ void ageprocs(int os_ticks)
   release(&ptable.lock);
 }
 
-
 int change_Q(int pid, int new_queue)
 {
   struct proc *p;
@@ -903,4 +904,106 @@ void show_process_info()
     cprintf("%d", (int)bjfrank(p));
     cprintf("\n");
   }
+}
+
+void priority_wakeup(void* chan){
+  acquire(&ptable.lock);
+  struct proc *p;
+  struct proc * p_max_pid = 0 ;
+  int first = 1 ; 
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == SLEEPING && p->chan == chan){
+      if(first){
+        p_max_pid = p;
+        first = 0;
+      }
+      else{
+        if(p->pid > p_max_pid->pid){
+          p_max_pid = p;
+        }
+      }
+    }
+  }
+  if (p_max_pid)
+  {
+      p_max_pid->state = RUNNABLE;
+
+    
+  }
+  
+  release(&ptable.lock);
+}
+
+int compare_pid(const void *a, const void *b) {
+  struct proc *procA = (struct proc *)a;
+  struct proc *procB = (struct proc *)b;
+  return procA->pid - procB->pid;
+}
+
+
+void make_priority_queue(void * chan) {
+  acquire(&ptable.lock); // Lock the ptable before making changes
+  struct proc *p;
+  struct proc *proc_queue = 0;
+  
+  // Allocate space for the process queue
+  //proc_queue = (struct proc *)malloc(sizeof(struct proc) * NPROC);
+  
+  /*if (proc_queue == '\0') {
+    // Handle the allocation failure 
+    release(&ptable.lock);
+    return;
+  }*/
+
+  int first = 1;
+  int i = 0;
+  cprintf("Queue: \n" );
+  // Populate the queue with processes that match the channel
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if (p->state == SLEEPING && p->chan == chan) {
+      if(first){
+        proc_queue = p ;
+        first = 0;
+        i ++;
+        cprintf("Pid %d , Name: %s \n", p->pid , p->name );
+      }
+      else if(p->pid > proc_queue->pid){
+        proc_queue = p ;
+        i ++ ;
+        cprintf("Pid %d , Name: %s \n", p->pid , p->name );
+      }
+    }
+  }
+  if(first){
+    cprintf("Queue is empty\n");
+  }
+  else{
+    cprintf("Now it is pid %d's turn\n");
+  }
+  // Sort the queue by pid using the comparison function
+  //qsort(proc_queue, i, sizeof(struct proc), compare_pid);
+  
+
+
+  release(&ptable.lock); // Release the lock after modifications are done
+}
+
+
+void priorityLock_test(){
+  cprintf("Process pid:%d want access to critical section\n" , myproc()->pid);
+  acquirePriorityLock(&lock);
+  cprintf("Process pid:%d acquired access to critical section\n" , myproc()->pid);
+  volatile long long temp = 0;
+  for (long long l = 0; l < 200000000; l++){
+    temp += 5 * 7 + 1;
+  }
+            
+  make_priority_queue(&lock);
+  releasePriorityLock(&lock);
+  cprintf("Process pid: %d exited from critical section\n" , myproc()->pid);
+}
+
+void
+init_queue_test(void){
+  initPriorityLock(&lock);
 }
