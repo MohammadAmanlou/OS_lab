@@ -616,34 +616,6 @@ kill(int pid)
   return -1;
 }
 
-//get process lifetime:
-/*int get_process_lifetime(int pid){
-  pid = pid - 1;
-  int lifetime;
-  cprintf("pid in proc.c is %d\n", pid + 1 );
-  struct proc *p;
-  acquire(&ptable.lock);
-  if(pid < 0 || pid >= NPROC){
-      return -1;
-      }
-  int count = 0;
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if((p->pid) == pid){
-      //cprintf("%dp-> pid is found\n", (p->pid));
-      lifetime = ticks - (p->start_time);
-      release(&ptable.lock);
-      return lifetime;
-    }
-    if(count > 80){
-      break;
-    }
-  }
-  release(&ptable.lock);
-  return -1;
-    
-}*/
-
-
 //get_uncle_count
 int get_uncle_count(int pid){
   struct proc *p;
