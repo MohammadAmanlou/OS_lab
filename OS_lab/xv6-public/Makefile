@@ -55,6 +55,7 @@ endif
 # If the makefile can't find QEMU, specify its path here
 # QEMU = qemu-system-i386
 
+QEMU = qemu-system-x86_64
 # Try to infer the correct QEMU
 ifndef QEMU
 QEMU = $(shell if which qemu > /dev/null; \
@@ -194,6 +195,7 @@ UPROGS=\
 	_PriorityLock_test\
 	_foo\
 	_CountSYSCALL_test\
+	_testShared\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -264,6 +266,7 @@ EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
 	printf.c umalloc.c digital_root_testing.c test_copy_file.c test_schedulling.c foo.c PriorityLock_test.c\
+	testShared.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 

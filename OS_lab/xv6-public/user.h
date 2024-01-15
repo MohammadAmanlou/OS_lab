@@ -32,6 +32,12 @@ void show_process_info(void);
 int set_proc_bjf_params(int, float, float, float,float);
 int set_system_bjf_params(float, float, float,float);
 
+// shared memory
+int shmget(uint, uint, int);
+int shmat(int, void*, int);
+int shmdt(void*);
+int shmctl(int, int, void*);
+
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

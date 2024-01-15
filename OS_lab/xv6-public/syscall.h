@@ -31,3 +31,9 @@
 #define SYS_priorityLock_test 30
 #define SYS_syscalls_count 31
 
+// System calls for shared memory
+#define SYS_shmget 32
+#define SYS_shmat  33
+#define SYS_shmdt  34
+#define SYS_shmctl 35
+

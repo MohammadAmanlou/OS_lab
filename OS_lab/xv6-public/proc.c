@@ -133,6 +133,22 @@ found:
   p->sched_info.bjf.process_size = p->sz;
   p->sched_info.bjf.process_size_ratio = 1;
   p->start_time = ticks;
+
+
+  for(int i = 0; i < SHAREDREGIONS; i++) {
+    // default values
+    p->pages[i].key = -1;
+    p->pages[i].shmid = -1;
+    p->pages[i].size  = 0;
+    p->pages[i].perm = PTE_W | PTE_U;
+    p->pages[i].virtualAddr = (void *)0;
+  }
+
+  return p;
+
+
+
+
   return p;
 }
 
@@ -242,6 +258,19 @@ fork(void)
 
   pid = np->pid;
 
+    // copy shared pages values from parent to child
+  for(int i = 0; i < SHAREDREGIONS; i++) {
+    if(curproc->pages[i].key != -1 && curproc->pages[i].shmid != -1) {
+      np->pages[i] = curproc->pages[i];
+      // get valid shmid index in shmtable-allRegions struct
+      int index = getShmidIndex(np->pages[i].shmid);
+      if(index != -1) {
+        // map them to child's address space
+        mappagesWrapper(np, index, i);
+      }
+    }
+  }
+
   acquire(&ptable.lock);
 
   np->state = RUNNABLE;
@@ -291,6 +320,14 @@ exit(void)
     if(curproc->ofile[fd]){
       fileclose(curproc->ofile[fd]);
       curproc->ofile[fd] = 0;
+    }
+  }
+
+    // detach, attached shared regions
+  for(int i = 0; i < SHAREDREGIONS; i++) {
+    if(curproc->pages[i].shmid != -1 && curproc->pages[i].key != -1) {
+      // wrapper that calls detach
+      shmdtWrapper(curproc->pages[i].virtualAddr);
     }
   }
 
