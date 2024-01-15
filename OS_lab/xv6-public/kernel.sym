@@ -1,5 +1,5 @@
 80100000 .text
-80109d00 .rodata
+80109d20 .rodata
 8010b000 .data
 8010d520 .bss
 00000000 .debug_line
@@ -17,7 +17,7 @@
 80100410 consputc.part.0
 8010d558 backs
 80100620 printint
-80109dc8 digits.1670
+80109de8 digits.1670
 801006c0 arrow
 00000000 exec.c
 00000000 file.c
@@ -36,9 +36,9 @@
 00000000 kalloc.c
 00000000 kbd.c
 8010d5b4 shift.1477
-8010a100 shiftcode
-8010a000 togglecode
-80109fe0 charcode.1478
+8010a120 shiftcode
+8010a020 togglecode
+8010a000 charcode.1478
 8010b200 normalmap
 8010b100 shiftmap
 8010b000 ctlmap
@@ -57,15 +57,15 @@
 80103d10 allocproc
 8010d000 first.1768
 8010d61c initproc
-8010a5a4 states.1809
-8010a58c states.1888
+8010a5c4 states.1809
+8010a5ac states.1888
 8010d5e0 lock
 00000000 sleeplock.c
 00000000 priorityLock.c
 00000000 spinlock.c
 00000000 string.c
 00000000 syscall.c
-8010a640 syscalls
+8010a660 syscalls
 00000000 sysfile.c
 801063a0 create
 80106540 argfd.constprop.0
@@ -97,7 +97,7 @@
 80115c60 kmem
 801084c7 vector213
 80108017 vector108
-80109cf0 shmdtWrapper
+80109d00 shmdtWrapper
 80107b50 uartinit
 80107dce vector43
 80102e30 lapiceoi
@@ -122,7 +122,7 @@
 80107d23 vector24
 80108032 vector111
 8010842b vector200
-80109930 shmctl
+80109940 shmctl
 80107ea6 vector67
 80108143 vector138
 801057c0 make_priority_queue
@@ -175,7 +175,7 @@
 801084f7 vector217
 80106180 fetchint
 80108d80 setupkvm
-80109500 shmat
+80109510 shmat
 80105fb0 memcpy
 80108d00 freevm
 80107c62 vector1
@@ -361,7 +361,7 @@
 801135e0 ftable
 8010824b vector160
 80106270 argptr
-80109c40 mappagesWrapper
+80109c50 mappagesWrapper
 801084df vector215
 80108227 vector157
 80104a00 find_digital_root
@@ -382,7 +382,7 @@
 80115da0 cpus
 80105a60 releasesleep
 80107fa2 vector95
-80109c10 getShmidIndex
+80109c20 getShmidIndex
 80105d50 holding
 80113fe0 sb
 80105da0 acquire
@@ -467,7 +467,7 @@
 8010809e vector123
 80107fab vector96
 80107d62 vector31
-80109b50 sharedMemoryInit
+80109b60 sharedMemoryInit
 8010844f vector203
 8010814f vector139
 801081f7 vector153
