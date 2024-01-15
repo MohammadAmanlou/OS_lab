@@ -131,11 +131,6 @@ extern int sys_set_proc_bjf_params(void);
 extern int sys_set_system_bjf_params(void);
 extern int sys_priorityLock_test(void);
 extern int sys_syscalls_count(void);
-// Declarations for shared memory
-extern int sys_shmget(void);
-extern int sys_shmat(void);
-extern int sys_shmdt(void);
-extern int sys_shmctl(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -169,10 +164,6 @@ static int (*syscalls[])(void) = {
 [SYS_set_system_bjf_params] sys_set_system_bjf_params,
 [SYS_priorityLock_test] sys_priorityLock_test,
 [SYS_syscalls_count] sys_syscalls_count,
-[SYS_shmget]  sys_shmget,
-[SYS_shmat]  sys_shmat,
-[SYS_shmdt]  sys_shmdt,
-[SYS_shmctl] sys_shmctl,
 
 
 };

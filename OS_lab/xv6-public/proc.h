@@ -35,16 +35,6 @@ struct context {
   uint eip;
 };
 
-// Shared memory
-
-#define SHAREDREGIONS 64 // same as marco in memlayout.h
-
-typedef struct sharedPages {
-  uint key, size;
-  int shmid,perm;
-  void *virtualAddr;
-} sharedPages;
-
 enum schedqueue {UNSET, ROUND_ROBIN, LCFS, BJF};
 
 struct bjfinfo {
@@ -84,7 +74,6 @@ struct proc {
   char name[16];               // Process name (debugging)
   uint start_time;             //Process start tick
   struct schedinfo sched_info;
-  sharedPages pages[SHAREDREGIONS];
 };
 
 // Process memory is laid out contiguously, low addresses first:

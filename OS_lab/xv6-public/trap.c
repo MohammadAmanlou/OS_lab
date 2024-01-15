@@ -45,7 +45,6 @@ trap(struct trapframe *tf)
       exit();
     return;
   }
-
   int os_tick;
   switch(tf->trapno){
   case T_IRQ0 + IRQ_TIMER:
@@ -79,29 +78,6 @@ trap(struct trapframe *tf)
     cprintf("cpu%d: spurious interrupt at %x:%x\n",
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
-    break;
-
-  /*
-    Shared memory:
-      handled, while writing into a region with read-only access
-  */
-  case 14:
-    if(strncmp(myproc()->name, "testShared", strlen(myproc()->name)) != 0) {
-      if(myproc() == 0 || (tf->cs&3) == 0){
-        // In kernel, it must be our mistake.
-        cprintf("unexpected trap %d from cpu %d eip %x (cr2=0x%x)\n",
-                tf->trapno, cpuid(), tf->eip, rcr2());
-        panic("trap");
-      }
-      // In user space, assume process misbehaved.
-      cprintf("pid %d %s: trap %d err %d on cpu %d "
-              "eip 0x%x addr 0x%x--kill proc\n",
-              myproc()->pid, myproc()->name, tf->trapno,
-              tf->err, cpuid(), tf->eip, rcr2());
-    } else {
-      cprintf("Segmentation fault (Core dumped) - Trap 14\n");
-    }
-    myproc()->killed = 1;
     break;
 
   //PAGEBREAK: 13

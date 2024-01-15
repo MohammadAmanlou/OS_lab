@@ -47,9 +47,3 @@ void free(void*);
 int atoi(const char*);
 void priorityLock_test(void);
 void syscalls_count(void);
-
-// shared memory
-int shmget(uint, uint, int);
-int shmat(int, void*, int);
-int shmdt(void*);
-int shmctl(int, int, void*);
